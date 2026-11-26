@@ -14,7 +14,6 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <!-- Chart.js สำหรับกราฟแสดงการเติบโต -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
     <!-- Flatpickr Date Range Picker -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
@@ -80,8 +79,8 @@
     <!-- Main Content / ส่วนแสดงผลหลัก -->
     <main class="max-w-6xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 flex-1 space-y-8">
 
-<!-- SECTION 1: ภาพรวมด้านบน (4 การ์ดหลัก) + ตัวเลือกแท็บเดือน -->
-        <section>
+        <!-- SECTION 1: ภาพรวมด้านบน (4 การ์ดหลัก) + ตัวเลือกแท็บเดือน -->
+        <section id="sectionMonthlyOverview">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
                 <div>
                     <h2 class="text-xl font-bold text-slate-900">ภาพรวมเป้าหมายและผลการปิดดีล (Monthly Overview)</h2>
@@ -183,7 +182,7 @@
 
                 <div class="bg-white rounded-2xl p-6 border border-emerald-200 bg-gradient-to-br from-white to-emerald-50/40 shadow-sm hover:shadow-md transition-shadow">
                     <div class="flex items-center justify-between mb-4">
-                        <span class="text-sm font-medium text-slate-600">มูลค่าที่ปิดดีลได้ทั้งหมด</span>
+                        <span class="text-sm font-medium text-slate-600">มูลค่าที่ปิดดีลได้ทั้งหมดตอนนี้</span>
                         <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center">
                             <i data-lucide="badge-dollar-sign" class="w-5 h-5"></i>
                         </div>
@@ -206,7 +205,7 @@
         </section>
 
         <!-- SECTION 2: เมนูสถิติการปิดดีล + กราฟแสดงการเติบโต (Growth Chart) -->
-        <section class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <section id="sectionGrowthStats" class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
             <div class="p-6 border-b border-slate-100 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                 <div>
                     <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
@@ -296,7 +295,7 @@
                     </h3>
                     <p class="text-xs text-slate-500 mt-1">แสดงรายละเอียดเป้าหมายจำนวนเครื่องต่อเดือน และความคืบหน้าของเจ้าหน้าที่เซลส์แต่ละคน (รีเซ็ตยอดใหม่เมื่อเปลี่ยนเดือน)</p>
                 </div>
-                <div class="text-xs text-slate-500 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-200 self-start sm:self-auto">
+                <div id="teamTargetSummaryBox" class="text-xs text-slate-500 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-200 self-start sm:self-auto">
                     รวมเป้าหมายทีม: <span id="teamTargetSummary" class="font-bold text-slate-800">200 เครื่อง</span>
                 </div>
             </div>
@@ -352,7 +351,7 @@
     </div>
 
     <!-- ========================================== -->
-    <!-- MODAL 2: Staff Login Modal (English)       -->
+    <!-- MODAL 2: Staff Login Modal -->
     <!-- ========================================== -->
     <div id="loginModal" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-xl border border-slate-100">
@@ -397,7 +396,7 @@
     </div>
 
     <!-- ========================================== -->
-    <!-- MODAL 3: หน้าต่างบันทึกดีล (เพิ่มวันที่ + หมายเหตุปิดดีลให้ใคร) -->
+    <!-- MODAL 3: หน้าต่างบันทึกดีล -->
     <!-- ========================================== -->
     <div id="editClosedUnitsModal" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl border border-slate-100">
@@ -505,7 +504,6 @@
     <!-- ========================================== -->
     <div id="overviewSummaryModal" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-xl border border-slate-100 max-h-[90vh] overflow-y-auto">
-            <!-- ส่วนหัวรายงาน -->
             <div class="flex items-start justify-between pb-4 border-b border-slate-200">
                 <div class="flex items-center gap-3">
                     <img src="img/logo.jpg" alt="MeawCharge Logo" class="w-11 h-11 rounded-xl object-cover border border-slate-200">
@@ -519,7 +517,6 @@
                 </button>
             </div>
 
-            <!-- กล่องสรุปตัวเลขภาพรวม 4 ช่อง -->
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 my-5">
                 <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80">
                     <span class="text-[11px] text-slate-500">เป้าหมายทีม</span>
@@ -539,7 +536,6 @@
                 </div>
             </div>
 
-            <!-- ตารางสรุปผลงานรายบุคคล -->
             <div class="border border-slate-200 rounded-xl overflow-hidden mb-4">
                 <table class="w-full text-left border-collapse text-xs sm:text-sm">
                     <thead>
@@ -555,7 +551,6 @@
                 </table>
             </div>
 
-            <!-- ข้อความสรุปพร้อมก๊อปปี้ -->
             <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 mb-5">
                 <div class="flex items-center justify-between mb-1.5">
                     <span class="text-xs font-semibold text-slate-700">ข้อความสรุปสำหรับส่งแชท / LINE</span>
@@ -567,7 +562,6 @@
                 <pre id="summaryPlainText" class="text-xs text-slate-700 whitespace-pre-wrap font-sans leading-relaxed"></pre>
             </div>
 
-            <!-- ปุ่มการทำงานด้านล่าง -->
             <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
                 <button type="button" onclick="closeModal('overviewSummaryModal')" class="px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-xl transition-colors cursor-pointer">
                     ปิด
@@ -582,15 +576,24 @@
 
     <script>
         // ==========================================
-        // 0. Web App URL ที่ได้จากการ Deploy Google Apps Script
+        // 0. Web App URL จาก Google Apps Script
         // ==========================================
         const GOOGLE_SHEET_API_URL = 'https://script.google.com/macros/s/AKfycbzSu8sxydleTKf80qW3u3HHwfzERPCI7Cpw2WLJW7O3G5qxiLKge4Q2P2ruCR-Z9YB6gg/exec';
 
         // ==========================================
-        // 1. ตั้งค่าราคาเฉลี่ยต่อเครื่อง เป้าหมายทีม 200 เครื่อง และระบบเลือกเดือนอัตโนมัติ
+        // 1. ตั้งค่าบัญชีผู้ใช้ สิทธิ์การเข้าถึง และข้อมูลตั้งต้น
         // ==========================================
         const unitPrice = 75000;
         const fixedTeamTargetUnits = 200;
+
+        // รายชื่อผู้ใช้สำหรับเข้าสู่ระบบ (สามารถแก้ไข Username / Password ได้ที่นี่)
+        const staffAccounts = {
+            'cpac':  { password: '1234', role: 'superadmin', displayName: 'Cpac (Admin)' },
+            'admin': { password: '1234', role: 'admin',      displayName: 'Admin' },
+            'niniw': { password: '1234', role: 'sale',       staffId: 'EMP-01', displayName: 'นินิว (EMP-01)' },
+            'non':   { password: '1234', role: 'sale',       staffId: 'EMP-02', displayName: 'นล (EMP-02)' },
+            'cream': { password: '1234', role: 'sale',       staffId: 'EMP-03', displayName: 'ครีม (EMP-03)' }
+        };
 
         const monthNamesEN = [
             'January', 'February', 'March', 'April', 'May', 'June',
@@ -611,6 +614,12 @@
         let allSheetRecords = [];
         let totalTargetUnits = fixedTeamTargetUnits;
         let growthChartInstance = null;
+
+        function getCurrentAccount() {
+            const isLogged = localStorage.getItem('pb_kpi_logged_in') === 'true';
+            const userKey = (localStorage.getItem('pb_kpi_logged_user') || '').toLowerCase();
+            return (isLogged && staffAccounts[userKey]) ? { userKey, ...staffAccounts[userKey] } : null;
+        }
 
         function distributeTeamTargets(members, teamGoal = 200) {
             if (!members || members.length === 0) return;
@@ -701,7 +710,7 @@
         }
 
         // ==========================================
-        // 3. ฟังก์ชันอัปเดตการ์ดภาพรวมและตารางรายบุคคล
+        // 3. ฟังก์ชันอัปเดตการ์ดภาพรวมและตารางรายบุคคล (กรองตามสิทธิ์)
         // ==========================================
         function updateDashboardAndSalesTable() {
             totalTargetUnits = fixedTeamTargetUnits;
@@ -750,8 +759,21 @@
             document.getElementById('valueProgressBar').style.width = valPct + '%';
             document.getElementById('pricePerUnitNote').textContent = `อ้างอิงมูลค่าเฉลี่ย ${unitPrice.toLocaleString()} บาท/เครื่อง`;
 
+            // ตรวจสอบสิทธิ์ผู้ใช้: ถ้าเป็นเซลส์ ให้แสดงเฉพาะแถวของตัวเอง
+            const account = getCurrentAccount();
+            const isIndividualSale = account && account.role === 'sale';
+
+            const visibleStaff = isIndividualSale
+                ? staffMembers.filter(s => s.id === account.staffId)
+                : staffMembers;
+
+            const teamSummaryBox = document.getElementById('teamTargetSummaryBox');
+            if (teamSummaryBox) {
+                teamSummaryBox.classList.toggle('hidden', isIndividualSale);
+            }
+
             const salesTableBody = document.getElementById('salesTableBody');
-            salesTableBody.innerHTML = staffMembers.map(staff => {
+            salesTableBody.innerHTML = visibleStaff.map(staff => {
                 const remaining = Math.max(0, staff.targetUnits - staff.closedUnits);
                 const staffValue = staff.closedUnits * unitPrice;
                 const pct = staff.targetUnits > 0 ? Math.min(100, (staff.closedUnits / staff.targetUnits) * 100).toFixed(1) : '0.0';
@@ -843,8 +865,14 @@
         }
 
         function openEditClosedUnitsModal(staffId) {
-            if (!isStaffLoggedIn) {
+            const account = getCurrentAccount();
+            if (!account) {
                 openModal('loginRequiredModal');
+                return;
+            }
+
+            if (account.role === 'sale' && account.staffId !== staffId) {
+                alert('คุณสามารถบันทึกยอดปิดดีลได้เฉพาะบัญชีของตัวเองเท่านั้น');
                 return;
             }
 
@@ -928,7 +956,7 @@
         }
 
         // ==========================================
-        // 4. ระบบปฏิทินสถิติ + กราฟการเติบโต (Growth Chart)
+        // 4. ระบบปฏิทินสถิติ + กราฟการเติบโต (กรองรายบุคคลเมื่อเป็นเซลส์)
         // ==========================================
         let currentStatsMode = 'daily';
         let selectedStartDate = '2026-11-01';
@@ -940,12 +968,10 @@
         ];
         const thaiShortMonths = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
 
-        // แปลงวันที่ทุกรูปแบบ (เช่น "Tue Nov 24", "24/11/2026", "2026-11-24") ให้เป็น "YYYY-MM-DD"
         function normalizeDateToISO(rawDate) {
             if (!rawDate) return '';
             const str = String(rawDate).trim();
 
-            // รูปแบบ YYYY-MM-DD
             const isoMatch = str.match(/^(\d{4})-(\d{2})-(\d{2})/);
             if (isoMatch) {
                 let year = parseInt(isoMatch[1], 10);
@@ -953,7 +979,6 @@
                 return `${year}-${isoMatch[2]}-${isoMatch[3]}`;
             }
 
-            // รูปแบบ DD/MM/YYYY
             const slashMatch = str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
             if (slashMatch) {
                 let year = parseInt(slashMatch[3], 10);
@@ -963,7 +988,6 @@
                 return `${year}-${m}-${d}`;
             }
 
-            // รูปแบบชื่อเดือนภาษาอังกฤษ เช่น "Tue Nov 24" หรือ "Nov 24, 2026"
             const monthMap = {
                 jan: '01', feb: '02', mar: '03', apr: '04',
                 may: '05', jun: '06', jul: '07', aug: '08',
@@ -1133,7 +1157,17 @@
             let chartUnits = [];
             let chartTitle = '';
 
-            const hasSheetData = allSheetRecords.length > 0;
+            // ตรวจสอบสิทธิ์: ถ้าเป็นเซลส์ ให้กรองเฉพาะยอดของคนนั้นคนเดียว
+            const account = getCurrentAccount();
+            const isIndividualSale = account && account.role === 'sale';
+            const staffObj = isIndividualSale ? staffMembers.find(s => s.id === account.staffId) : null;
+            const baseMonthlyGoal = isIndividualSale ? (staffObj ? staffObj.targetUnits : 67) : fixedTeamTargetUnits;
+
+            const recordsForChart = isIndividualSale
+                ? allSheetRecords.filter(r => r.staff_id === account.staffId)
+                : allSheetRecords;
+
+            const hasSheetData = recordsForChart.length > 0;
 
             if (currentStatsMode === 'daily') {
                 const startObj = new Date(selectedStartDate);
@@ -1145,7 +1179,7 @@
                     ? formatThaiDate(selectedStartDate)
                     : `${formatThaiDate(selectedStartDate)} – ${formatThaiDate(selectedEndDate)} (${totalDays} วัน)`;
 
-                targetReference = Math.ceil((fixedTeamTargetUnits / 30) * totalDays);
+                targetReference = Math.ceil((baseMonthlyGoal / 30) * totalDays);
                 chartTitle = `กราฟการเติบโตรายวัน (${displayLabel})`;
 
                 const loopDays = Math.min(totalDays, 60);
@@ -1157,7 +1191,7 @@
                     chartLabels.push(shortLabel);
 
                     if (hasSheetData) {
-                        const daySum = allSheetRecords
+                        const daySum = recordsForChart
                             .filter(r => normalizeDateToISO(r.date) === isoDate)
                             .reduce((s, r) => s + (Number(r.units) || 0), 0);
                         chartUnits.push(daySum);
@@ -1167,7 +1201,7 @@
                 }
 
                 if (hasSheetData) {
-                    const matched = allSheetRecords.filter(r => {
+                    const matched = recordsForChart.filter(r => {
                         const d = normalizeDateToISO(r.date);
                         return d >= selectedStartDate && d <= selectedEndDate;
                     });
@@ -1179,14 +1213,14 @@
                 const selectedMonth = document.getElementById('picker-monthly').value;
                 const yearPart = selectedMonth.split('-')[0] || '2026';
                 displayLabel = formatThaiMonth(selectedMonth);
-                targetReference = fixedTeamTargetUnits;
+                targetReference = baseMonthlyGoal;
                 chartTitle = `กราฟเปรียบเทียบการเติบโตรายเดือนตลอดปี ${yearPart}`;
 
                 for (let m = 1; m <= 12; m++) {
                     const mStr = `${yearPart}-${String(m).padStart(2, '0')}`;
                     chartLabels.push(thaiShortMonths[m - 1]);
                     if (hasSheetData) {
-                        const mSum = allSheetRecords
+                        const mSum = recordsForChart
                             .filter(r => normalizeDateToISO(r.date).startsWith(mStr))
                             .reduce((s, r) => s + (Number(r.units) || 0), 0);
                         chartUnits.push(mSum);
@@ -1196,7 +1230,7 @@
                 }
 
                 if (hasSheetData) {
-                    const matched = allSheetRecords.filter(r => normalizeDateToISO(r.date).startsWith(selectedMonth));
+                    const matched = recordsForChart.filter(r => normalizeDateToISO(r.date).startsWith(selectedMonth));
                     units = matched.reduce((sum, r) => sum + (Number(r.units) || 0), 0);
                     value = matched.reduce((sum, r) => sum + (Number(r.amount) || (Number(r.units) * unitPrice)), 0);
                 }
@@ -1204,14 +1238,14 @@
             } else if (currentStatsMode === 'yearly') {
                 const selectedYear = document.getElementById('picker-yearly').value;
                 displayLabel = `ประจำปี ${selectedYear} (${parseInt(selectedYear) + 543})`;
-                targetReference = fixedTeamTargetUnits * 12;
+                targetReference = baseMonthlyGoal * 12;
                 chartTitle = `กราฟเปรียบเทียบการเติบโตแบบรายปี (2024 – 2026)`;
 
                 const yearsList = ['2024', '2025', '2026'];
                 yearsList.forEach(yr => {
                     chartLabels.push(`ปี ${yr} (${parseInt(yr) + 543})`);
                     if (hasSheetData) {
-                        const ySum = allSheetRecords
+                        const ySum = recordsForChart
                             .filter(r => normalizeDateToISO(r.date).startsWith(yr))
                             .reduce((s, r) => s + (Number(r.units) || 0), 0);
                         chartUnits.push(ySum);
@@ -1221,10 +1255,14 @@
                 });
 
                 if (hasSheetData) {
-                    const matched = allSheetRecords.filter(r => normalizeDateToISO(r.date).startsWith(selectedYear));
+                    const matched = recordsForChart.filter(r => normalizeDateToISO(r.date).startsWith(selectedYear));
                     units = matched.reduce((sum, r) => sum + (Number(r.units) || 0), 0);
                     value = matched.reduce((sum, r) => sum + (Number(r.amount) || (Number(r.units) * unitPrice)), 0);
                 }
+            }
+
+            if (isIndividualSale) {
+                chartTitle = `${chartTitle} — เฉพาะของ ${account.displayName}`;
             }
 
             updateGrowthChart(chartLabels, chartUnits, chartTitle);
@@ -1269,7 +1307,7 @@
         }
 
         // ==========================================
-        // 5. ระบบ Modal และ Staff Login (แสดงตัวเลือกเดือนเฉพาะ cpac)
+        // 5. ระบบ Modal และ Staff Login
         // ==========================================
         function openModal(modalId) {
             document.getElementById(modalId).classList.remove('hidden');
@@ -1281,8 +1319,15 @@
 
         function updateRoleBasedUI(loggedIn, username) {
             const monthWrapper = document.getElementById('monthSelectorWrapper');
-            const isCpac = loggedIn && username && username.toLowerCase() === 'cpac';
+            const overviewSection = document.getElementById('sectionMonthlyOverview');
 
+            const userKey = (username || '').toLowerCase();
+            const account = loggedIn ? staffAccounts[userKey] : null;
+
+            const isCpac = account && account.role === 'superadmin';
+            const isIndividualSale = account && account.role === 'sale';
+
+            // 1. แสดงตัวเลือกเดือน + Reset เฉพาะ cpac
             if (isCpac) {
                 monthWrapper.classList.remove('hidden');
             } else {
@@ -1293,15 +1338,30 @@
                     changeActiveMonth(realCurrentMonth);
                 }
             }
+
+            // 2. ซ่อนการ์ดภาพรวมทีม (Section 1) เมื่อเป็นเซลส์รายบุคคล (แต่ยังคงแสดงกราฟเฉพาะของคนนั้น)
+            if (overviewSection) {
+                overviewSection.classList.toggle('hidden', isIndividualSale);
+            }
+
+            // 3. อัปเดตตารางและกราฟตามสิทธิ์ทันที
+            updateDashboardAndSalesTable();
+            if (typeof renderSelectedPeriodStats === 'function') {
+                renderSelectedPeriodStats();
+            }
         }
 
         let isStaffLoggedIn = localStorage.getItem('pb_kpi_logged_in') === 'true';
         const savedUser = localStorage.getItem('pb_kpi_logged_user') || '';
 
-        if (isStaffLoggedIn) {
-            document.getElementById('loggedInUserName').textContent = savedUser;
+        if (isStaffLoggedIn && staffAccounts[savedUser.toLowerCase()]) {
+            document.getElementById('loggedInUserName').textContent = staffAccounts[savedUser.toLowerCase()].displayName;
             document.getElementById('loginBtn').classList.add('hidden');
             document.getElementById('loggedInProfile').classList.remove('hidden');
+        } else {
+            isStaffLoggedIn = false;
+            localStorage.removeItem('pb_kpi_logged_in');
+            localStorage.removeItem('pb_kpi_logged_user');
         }
         updateRoleBasedUI(isStaffLoggedIn, savedUser);
 
@@ -1312,24 +1372,25 @@
 
         function handleLogin(event) {
             event.preventDefault();
-            const username = document.getElementById('loginUsername').value.trim();
-            const password = document.getElementById('loginPassword').value.trim();
+            const usernameInput = document.getElementById('loginUsername').value.trim();
+            const passwordInput = document.getElementById('loginPassword').value.trim();
             const errorBox = document.getElementById('loginErrorMsg');
 
-            const isValidUser = (username.toLowerCase() === 'cpac' || username.toLowerCase() === 'admin');
+            const userKey = usernameInput.toLowerCase();
+            const account = staffAccounts[userKey];
 
-            if (isValidUser && password === '1234') {
+            if (account && account.password === passwordInput) {
                 isStaffLoggedIn = true;
                 localStorage.setItem('pb_kpi_logged_in', 'true');
-                localStorage.setItem('pb_kpi_logged_user', username);
+                localStorage.setItem('pb_kpi_logged_user', userKey);
                 errorBox.classList.add('hidden');
-                document.getElementById('loggedInUserName').textContent = username;
+                document.getElementById('loggedInUserName').textContent = account.displayName;
                 document.getElementById('loginBtn').classList.add('hidden');
                 document.getElementById('loggedInProfile').classList.remove('hidden');
                 document.getElementById('loginUsername').value = '';
                 document.getElementById('loginPassword').value = '';
 
-                updateRoleBasedUI(true, username);
+                updateRoleBasedUI(true, userKey);
                 closeModal('loginModal');
             } else {
                 isStaffLoggedIn = false;
@@ -1358,8 +1419,8 @@
         }
 
         async function executeResetSelectedMonth() {
-            const currentUser = localStorage.getItem('pb_kpi_logged_user') || '';
-            if (!isStaffLoggedIn || currentUser.toLowerCase() !== 'cpac') {
+            const currentUser = (localStorage.getItem('pb_kpi_logged_user') || '').toLowerCase();
+            if (!isStaffLoggedIn || currentUser !== 'cpac') {
                 alert('เฉพาะบัญชี cpac เท่านั้นที่สามารถ Reset ข้อมูลได้');
                 return;
             }
@@ -1403,12 +1464,6 @@
                 resetBtn.textContent = 'ยืนยันการ Reset';
             }
         }
-
-        // เริ่มต้นทำงานระบบทั้งหมด
-        renderStaffModalList();
-        switchStatsMode('daily');
-        fetchDataFromGoogleSheet();
-        lucide.createIcons();
 
         // ==========================================
         // 7. ระบบสรุปภาพรวม (Executive Overview Summary)
@@ -1499,6 +1554,11 @@ ${staffLines}`;
             printWin.document.close();
         }
 
+        // เริ่มต้นทำงานระบบทั้งหมด
+        renderStaffModalList();
+        switchStatsMode('daily');
+        fetchDataFromGoogleSheet();
+        lucide.createIcons();
     </script>
 </body>
 </html>
