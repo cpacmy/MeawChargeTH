@@ -729,7 +729,17 @@
             });
 
             staffMembers = Array.from(staffMap.values());
-            distributeTeamTargets(staffMembers, fixedTeamTargetUnits);
+
+            const savedTargets = getSavedMonthTargets(activeMonthSheet);
+            if (savedTargets) {
+                staffMembers.forEach(m => {
+                    if (typeof savedTargets[m.id] === 'number') {
+                        m.targetUnits = savedTargets[m.id];
+                    }
+                });
+            } else {
+                distributeTeamTargets(staffMembers, fixedTeamTargetUnits);
+            }
 
             document.getElementById('overviewMonthSubtitle').textContent = `สรุปจำนวนเครื่องและมูลค่าการลงทุนประจำเดือน ${activeMonthSheet} 2026`;
             document.getElementById('tableMonthLabel').textContent = activeMonthSheet;
@@ -787,7 +797,8 @@
         // 3. ฟังก์ชันอัปเดตการ์ดภาพรวมและตารางรายบุคคล (กรองตามสิทธิ์)
         // ==========================================
         function updateDashboardAndSalesTable() {
-            totalTargetUnits = fixedTeamTargetUnits;
+            const assignedSum = staffMembers.reduce((sum, s) => sum + (Number(s.targetUnits) || 0), 0);
+            totalTargetUnits = assignedSum;
             const totalClosedUnits = staffMembers.reduce((sum, s) => sum + s.closedUnits, 0);
             const totalTargetValue = totalTargetUnits * unitPrice;
             const totalClosedValue = totalClosedUnits * unitPrice;
@@ -1235,7 +1246,10 @@
             const account = getCurrentAccount();
             const isIndividualSale = account && account.role === 'sale';
             const staffObj = isIndividualSale ? staffMembers.find(s => s.id === account.staffId) : null;
-            const baseMonthlyGoal = isIndividualSale ? (staffObj ? staffObj.targetUnits : 67) : fixedTeamTargetUnits;
+            const totalAssignedTeamUnits = staffMembers.reduce((sum, s) => sum + (Number(s.targetUnits) || 0), 0);
+            const baseMonthlyGoal = isIndividualSale
+                ? (staffObj ? (Number(staffObj.targetUnits) || 0) : 0)
+                : totalAssignedTeamUnits;
 
             const recordsForChart = isIndividualSale
                 ? allSheetRecords.filter(r => r.staff_id === account.staffId)
@@ -1345,6 +1359,10 @@
             const pct = targetReference > 0 ? Math.min(100, (units / targetReference) * 100).toFixed(1) : '0.0';
 
             document.getElementById('statSelectedLabel').textContent = displayLabel;
+            document.getElementById('statAssignedTargetTitle').textContent = isIndividualSale
+                ? `จำนวนที่ได้รับมอบหมาย (${account.displayName})`
+                : 'จำนวนที่ได้รับมอบหมายทั้งหมด';
+            document.getElementById('statAssignedTargetUnits').textContent = baseMonthlyGoal.toLocaleString();
             document.getElementById('statSelectedUnits').textContent = units.toLocaleString();
             document.getElementById('statSelectedUnits').className = `text-xl font-bold ${isPeriodTargetReached ? 'text-emerald-600' : 'text-blue-600'}`;
             document.getElementById('statSelectedValue').textContent = value.toLocaleString();
@@ -1537,6 +1555,63 @@
                 resetBtn.disabled = false;
                 resetBtn.textContent = 'ยืนยันการ Reset';
             }
+        }
+
+        function openEditTargetsModal() {
+            const account = getCurrentAccount();
+            if (!account || account.userKey !== 'cpac') {
+                alert('เฉพาะบัญชี cpac เท่านั้นที่สามารถกำหนดจำนวนเครื่องที่ได้รับมอบหมายได้');
+                return;
+            }
+
+            document.getElementById('editTargetsSubtitle').textContent = `ประจำเดือน ${activeMonthSheet} 2026`;
+            const container = document.getElementById('targetInputsContainer');
+
+            container.innerHTML = staffMembers.map(s => `
+                <div class="flex items-center justify-between gap-3 p-2.5 rounded-xl bg-slate-50 border border-slate-200/70">
+                    <div>
+                        <p class="text-sm font-semibold text-slate-800">${s.name}</p>
+                        <p class="text-[11px] text-slate-400">${s.id}</p>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                        <input type="number" min="0" step="1" data-staff-id="${s.id}" value="${s.targetUnits}" oninput="updatePreviewAssignedTotal()"
+                            class="target-unit-input w-24 px-3 py-1.5 text-sm font-bold text-right text-blue-600 bg-white border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <span class="text-xs text-slate-500">เครื่อง</span>
+                    </div>
+                </div>
+            `).join('');
+
+            updatePreviewAssignedTotal();
+            openModal('editTargetsModal');
+            if (window.lucide) lucide.createIcons();
+        }
+
+        function updatePreviewAssignedTotal() {
+            const inputs = document.querySelectorAll('.target-unit-input');
+            let sum = 0;
+            inputs.forEach(inp => {
+                sum += Math.max(0, parseInt(inp.value, 10) || 0);
+            });
+            document.getElementById('previewTotalAssignedUnits').textContent = `${sum.toLocaleString()} เครื่อง`;
+        }
+
+        function saveCustomTargets(event) {
+            event.preventDefault();
+            const inputs = document.querySelectorAll('.target-unit-input');
+            const newTargetMap = {};
+
+            inputs.forEach(inp => {
+                const sid = inp.getAttribute('data-staff-id');
+                const val = Math.max(0, parseInt(inp.value, 10) || 0);
+                newTargetMap[sid] = val;
+            });
+
+            saveMonthTargetsToStorage(activeMonthSheet, newTargetMap);
+            recalculateStaffForSelectedMonth();
+            renderStaffModalList();
+            updateDashboardAndSalesTable();
+            renderSelectedPeriodStats();
+            closeModal('editTargetsModal');
         }
 
         // ==========================================
