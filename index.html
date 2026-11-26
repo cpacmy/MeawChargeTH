@@ -114,6 +114,11 @@
                                 <option value="December">December (ธ.ค.)</option>
                             </select>
                         </div>
+                        <!-- ปุ่มตั้งค่าเป้าของแต่ละคนในเดือนที่เลือก (แสดงเฉพาะ cpac) -->
+                        <button type="button" onclick="openEditTargetsModal()" class="inline-flex items-center gap-1.5 bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 px-3.5 py-2 rounded-xl text-xs font-semibold shadow-2xs transition-colors cursor-pointer">
+                            <i data-lucide="sliders" class="w-3.5 h-3.5"></i>
+                            <span>ตั้งค่าเป้า</span>
+                        </button>
 
                         <!-- ปุ่ม Reset เฉพาะเดือนที่เลือกใน Google Sheet -->
                         <button type="button" onclick="openResetConfirmModal()" class="inline-flex items-center gap-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 px-3.5 py-2 rounded-xl text-xs font-semibold shadow-2xs transition-colors cursor-pointer">
@@ -507,6 +512,46 @@
     </div>
 
     <!-- ========================================== -->
+    <!-- MODAL 5.5: ตั้งค่าจำนวนเครื่องที่ได้รับมอบหมายรายบุคคล (เฉพาะ cpac) -->
+    <!-- ========================================== -->
+    <div id="editTargetsModal" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl border border-slate-100">
+            <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
+                        <i data-lucide="sliders" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-bold text-slate-900">กำหนดจำนวนเครื่องที่ได้รับมอบหมาย</h3>
+                        <p id="editTargetsSubtitle" class="text-xs text-slate-500">ประจำเดือน November 2026</p>
+                    </div>
+                </div>
+                <button onclick="closeModal('editTargetsModal')" class="text-slate-400 hover:text-slate-600 p-1 cursor-pointer">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <form onsubmit="saveCustomTargets(event)" class="py-4 space-y-3">
+                <div id="targetInputsContainer" class="space-y-2.5"></div>
+
+                <div class="p-3 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between text-xs">
+                    <span class="text-slate-600 font-medium">รวมเป้าหมายทั้งหมดที่กำหนด:</span>
+                    <span id="previewTotalAssignedUnits" class="font-bold text-blue-600 text-sm">200 เครื่อง</span>
+                </div>
+
+                <div class="pt-2 flex items-center justify-end gap-2">
+                    <button type="button" onclick="closeModal('editTargetsModal')" class="px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-xl transition-colors cursor-pointer">
+                        ยกเลิก
+                    </button>
+                    <button type="submit" class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-xl shadow-sm transition-colors cursor-pointer">
+                        บันทึกเป้าหมาย
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
     <!-- MODAL 6: ใบสรุปภาพรวมประจำเดือน (Executive Overview) -->
     <!-- ========================================== -->
     <div id="overviewSummaryModal" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 flex items-center justify-center p-4">
@@ -582,6 +627,7 @@
     </div>
 
     <script>
+
         // ==========================================
         // 0. Web App URL จาก Google Apps Script
         // ==========================================
@@ -635,6 +681,27 @@
             members.forEach((m, idx) => {
                 m.targetUnits = base + (idx < remainder ? 1 : 0);
             });
+        }
+
+        function getSavedMonthTargets(monthName) {
+            try {
+                const raw = localStorage.getItem('meawcharge_custom_targets_v1');
+                const parsed = raw ? JSON.parse(raw) : {};
+                return parsed[monthName] || null; // รูปแบบ { 'EMP-01': 67, 'EMP-02': 67, 'EMP-03': 66 }
+            } catch (e) {
+                return null;
+            }
+        }
+
+        function saveMonthTargetsToStorage(monthName, targetMapObj) {
+            try {
+                const raw = localStorage.getItem('meawcharge_custom_targets_v1');
+                const parsed = raw ? JSON.parse(raw) : {};
+                parsed[monthName] = targetMapObj;
+                localStorage.setItem('meawcharge_custom_targets_v1', JSON.stringify(parsed));
+            } catch (e) {
+                console.error('Failed to save targets:', e);
+            }
         }
 
         function recalculateStaffForSelectedMonth() {
