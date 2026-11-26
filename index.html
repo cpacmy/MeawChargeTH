@@ -552,6 +552,26 @@
     </div>
 
     <!-- ========================================== -->
+    <!-- MODAL 5.6: Popup แจ้งเตือนเมื่อตั้งเป้าสำเร็จ -->
+    <!-- ========================================== -->
+    <div id="targetSavedModal" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-xl border border-slate-100 text-center">
+            <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto mb-3">
+                <i data-lucide="check-circle-2" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-base font-bold text-slate-900">ได้ตั้งเป้าแล้ว</h3>
+            <p id="targetSavedDesc" class="text-xs text-slate-500 mt-1.5 leading-relaxed">
+                บันทึกจำนวนเครื่องที่ได้รับมอบหมายเรียบร้อยแล้ว
+            </p>
+            <div class="mt-5 flex justify-center">
+                <button type="button" onclick="closeModal('targetSavedModal')" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium rounded-xl shadow-sm transition-colors cursor-pointer">
+                    ตกลง
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
     <!-- MODAL 6: ใบสรุปภาพรวมประจำเดือน (Executive Overview) -->
     <!-- ========================================== -->
     <div id="overviewSummaryModal" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 flex items-center justify-center p-4">
@@ -1612,7 +1632,21 @@
             updateDashboardAndSalesTable();
             renderSelectedPeriodStats();
             closeModal('editTargetsModal');
+        const totalAssigned = Object.values(newTargetMap).reduce((sum, n) => sum + n, 0);
+
+            saveMonthTargetsToStorage(activeMonthSheet, newTargetMap);
+            recalculateStaffForSelectedMonth();
+            renderStaffModalList();
+            updateDashboardAndSalesTable();
+            renderSelectedPeriodStats();
+            closeModal('editTargetsModal');
+
+            document.getElementById('targetSavedDesc').textContent =
+                `อัปเดตเป้าหมายประจำเดือน ${activeMonthSheet} รวม ${totalAssigned.toLocaleString()} เครื่องเรียบร้อยแล้ว`;
+            openModal('targetSavedModal');
+            if (window.lucide) lucide.createIcons();
         }
+        
 
         // ==========================================
         // 7. ระบบสรุปภาพรวม (Executive Overview Summary)
